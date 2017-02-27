@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +33,11 @@ public class CustomView extends View {
     private Bitmap canvasBitmap;
 
     // brush size
-    private float currentBrushSize, lastBrushSize;
+    private float brushSize = 40;
+    private float eraseSize = 40;
+
+    // Is eraser mode ?
+    private boolean isEraserMode = false;
 
     private void init(){
 
@@ -40,7 +46,7 @@ public class CustomView extends View {
         drawPaint = new Paint();
         drawPaint.setColor(brushColor);
         drawPaint.setAntiAlias(true);
-        drawPaint.setStrokeWidth(currentBrushSize);
+        drawPaint.setStrokeWidth(brushSize);
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -99,5 +105,34 @@ public class CustomView extends View {
         // redraw
         invalidate();
         return true;
+    }
+
+    // Start new
+    public void startNewDrawingView(){
+        drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        invalidate();
+    }
+
+    // Enable eraser mode
+    public void setEraserMode(boolean b){
+        if (b == true){ // eraser
+            // set paint to erase
+            drawPaint.setStrokeWidth(eraseSize);
+            drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        } else {
+            drawPaint.setStrokeWidth(brushSize);
+            drawPaint.setXfermode(null);
+        }
+    }
+
+    // Get brush's color
+    public int getBrushColor(){
+        return drawPaint.getColor();
+    }
+
+    // Set brush's color
+    public void setBrushColor(int newColor){
+        brushColor = newColor;
+        drawPaint.setColor(brushColor);
     }
 }
