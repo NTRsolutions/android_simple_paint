@@ -135,4 +135,26 @@ public class CustomView extends View {
         brushColor = newColor;
         drawPaint.setColor(brushColor);
     }
+
+    // Get brush's size
+    public float getBrushSize() {
+        return brushSize;
+    }
+
+    // Set brush's size
+    public void setBrushSize(float newSize) {
+        brushSize = newSize;
+        drawPaint.setStrokeWidth(brushSize);
+    }
+
+    // Get eraser'size
+    public float getEraserSize(){
+        return eraseSize;
+    }
+
+    // Set eraser's size
+    public void setEraserSize(float newSize){
+        eraseSize = newSize;
+        setEraserMode(isEraserMode);
+    }
 }

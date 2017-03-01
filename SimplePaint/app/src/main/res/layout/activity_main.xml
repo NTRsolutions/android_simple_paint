@@ -35,6 +35,12 @@
                 android:src="@mipmap/ic_eraser"/>
 
             <ImageButton
+                android:id="@+id/btnSizeChooser"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:src="@mipmap/ic_size"/>
+
+            <ImageButton
                 android:id="@+id/btnColorPicker"
                 android:layout_width="65dp"
                 android:layout_height="65dp"

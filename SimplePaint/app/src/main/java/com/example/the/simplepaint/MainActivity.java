@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -22,6 +23,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private ImageButton btnNew;
     private ImageButton btnBrush;
     private ImageButton btnEraser;
+    private ImageButton btnSizeChooser;
     private ImageButton btnColorPicker;
 
     @Override
@@ -49,6 +51,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         btnEraser = (ImageButton)findViewById(R.id.btnEraser);
         btnEraser.setOnClickListener(this);
 
+        btnSizeChooser = (ImageButton)findViewById(R.id.btnSizeChooser);
+        btnSizeChooser.setOnClickListener(this);
+
         btnColorPicker = (ImageButton)findViewById(R.id.btnColorPicker);
         btnColorPicker.setOnClickListener(this);
     }
@@ -63,6 +68,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
             drawView.setEraserMode(true);
         } else if (view.getId() == btnColorPicker.getId()){
             openColorPickerDialog(false);
+        } else if (view.getId() == btnSizeChooser.getId())
+        {
+            openSizeChooserDialog();
         }
     }
 
@@ -120,5 +128,70 @@ public class MainActivity extends Activity implements View.OnClickListener{
             }
         });
         dialog.show();
+    }
+
+    private void openSizeChooserDialog()
+    {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.heightPixels;
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Size: ");
+        dialog.setContentView(R.layout.size_chooser);
+
+        // Get View
+        SeekBar sbBrushSize = (SeekBar)dialog.findViewById(R.id.seekBarBrushSize);
+        final SeekBar sbEraserSize = (SeekBar)dialog.findViewById(R.id.seekBarEraserSize);
+        Button btnOK = (Button)dialog.findViewById(R.id.btnOKSizeChooser);
+
+        sbBrushSize.setMax(180);
+        sbBrushSize.setProgress((int)drawView.getBrushSize());
+        sbBrushSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                drawView.setBrushSize(seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        sbEraserSize.setMax(180);
+        sbEraserSize.setProgress((int)drawView.getEraserSize());
+        sbEraserSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                drawView.setEraserSize(seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        // Show size dialog
+        dialog.show();
+        dialog.getWindow().setLayout((5 * width)/7, (3 * height)/5); // set dimension for custom dialog
     }
 }
