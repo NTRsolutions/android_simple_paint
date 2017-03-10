@@ -3,6 +3,7 @@ package com.example.the.simplepaint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -26,7 +27,7 @@ public class CustomView extends View {
     private Paint canvasPaint;
 
     // initial color
-    private int brushColor = 0XFF660000;
+    private int brushColor = Color.parseColor("#1B7D2B");;
 
     private Canvas drawCanvas;
 
@@ -39,7 +40,8 @@ public class CustomView extends View {
     // Is eraser mode ?
     private boolean isEraserMode = false;
 
-    private void init(){
+    public CustomView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         drawPath = new Path();
 
@@ -52,11 +54,6 @@ public class CustomView extends View {
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
 
         canvasPaint = new Paint(drawPaint.DITHER_FLAG);
-    }
-
-    public CustomView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
     }
 
     @Override
@@ -94,7 +91,6 @@ public class CustomView extends View {
                 drawPath.lineTo(touchX, touchY);
                 break;
             case MotionEvent.ACTION_UP:
-                drawPath.moveTo(touchX, touchY);
                 drawCanvas.drawPath(drawPath, drawPaint);
                 drawPath.reset();
                 break;
@@ -156,5 +152,12 @@ public class CustomView extends View {
     public void setEraserSize(float newSize){
         eraseSize = newSize;
         setEraserMode(isEraserMode);
+    }
+
+    // show bitmap on custom view
+    public void setCanvasBitmap(Bitmap b)
+    {
+        Bitmap scaled = Bitmap.createScaledBitmap(b, drawCanvas.getWidth(), drawCanvas.getHeight(), true);
+        drawCanvas.drawBitmap(scaled, 0, 0, null);
     }
 }
